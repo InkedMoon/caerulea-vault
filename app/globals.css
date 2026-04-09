@@ -71,6 +71,25 @@ a {
 .back-to-top {
   position: fixed;
   right: 24px;
+  bottom: 78px;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(140, 211, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(7, 21, 31, 0.82);
+  color: var(--accent);
+  font-size: 1.15rem;
+  line-height: 1;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(10px);
+}
+
+.back-to-bottom {
+  position: fixed;
+  right: 24px;
   bottom: 24px;
   z-index: 20;
   display: grid;
@@ -92,7 +111,7 @@ a {
 .add-record-button {
   position: fixed;
   right: 24px;
-  bottom: 78px;
+  bottom: 132px;
   z-index: 20;
   display: grid;
   place-items: center;
@@ -111,7 +130,7 @@ a {
 .edit-record-button {
   position: fixed;
   right: 24px;
-  bottom: 132px;
+  bottom: 186px;
   z-index: 20;
   display: grid;
   place-items: center;
@@ -324,6 +343,13 @@ a {
   background: rgba(140, 211, 255, 0.04);
 }
 
+.generated-item-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .generated-item-title {
   margin: 0;
   color: #f2f8fc;
@@ -333,6 +359,18 @@ a {
   margin: 6px 0 0;
   color: #8fb0c7;
   font-size: 0.82rem;
+}
+
+.generated-item-remove {
+  width: 28px;
+  height: 28px;
+  border: 1px solid rgba(255, 151, 151, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 151, 151, 0.08);
+  color: #ffd4d4;
+  font: inherit;
+  line-height: 1;
+  cursor: pointer;
 }
 
 .editor-actions {
@@ -1168,6 +1206,11 @@ a {
 
   .back-to-top {
     right: 16px;
+    bottom: 70px;
+  }
+
+  .back-to-bottom {
+    right: 16px;
     bottom: 16px;
   }
 
@@ -1180,12 +1223,12 @@ a {
 
   .add-record-button {
     right: 16px;
-    bottom: 70px;
+    bottom: 124px;
   }
 
   .edit-record-button {
     right: 16px;
-    bottom: 124px;
+    bottom: 178px;
   }
 }
 

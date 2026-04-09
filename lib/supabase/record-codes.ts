@@ -1,11 +1,6 @@
 import "server-only";
 
-type AdminClient = {
-  from: (table: string) => {
-    select: (query: string) => any;
-    update: (values: Record<string, unknown>) => any;
-  };
-};
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 type RecordCodeRow = {
   id: string;
@@ -27,7 +22,7 @@ type ItemCodeRow = {
 // 3. 其他记录按日期升序排序，从 001 开始连续编号
 // 4. 物品 item_code 也会跟着 record_code 一起重排
 export async function renumberSectionRecordCodes(
-  supabase: AdminClient,
+  supabase: SupabaseClient,
   sectionId: string,
   sectionCode: string,
 ) {

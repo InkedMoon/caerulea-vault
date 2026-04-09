@@ -95,6 +95,10 @@ export default function EditRecordClientPage({
     );
   }
 
+  function removeDraftItem(index: number) {
+    setDraftItems((current) => current.filter((_, itemIndex) => itemIndex !== index));
+  }
+
   function appendDraftItemsFromInput(source: string) {
     const names = source
       .split("，")
@@ -175,13 +179,21 @@ export default function EditRecordClientPage({
         }),
       });
 
-      const result = (await response.json()) as { ok?: boolean; error?: string };
+      const result = (await response.json()) as {
+        ok?: boolean;
+        error?: string;
+        recordCode?: string;
+        sectionSlug?: string;
+      };
 
       if (!response.ok) {
         throw new Error(result.error || "保存失败。");
       }
 
       setSaveMessage("已保存到数据库。");
+      if (result.recordCode && result.sectionSlug) {
+        router.push(`/archive/${result.sectionSlug}/${result.recordCode}/edit`);
+      }
       router.refresh();
     } catch (error) {
       setSaveError(error instanceof Error ? error.message : "保存失败。");
@@ -409,9 +421,19 @@ export default function EditRecordClientPage({
               <div className="editor-generated-items">
                 {draftItems.map((item, index) => (
                   <div key={item.id} className="generated-item-card">
-                    <div>
+                    <div className="generated-item-header">
+                      <div>
                       <p className="generated-item-title">{item.title}</p>
                       <p className="generated-item-id">{item.id}</p>
+                      </div>
+                      <button
+                        type="button"
+                        className="generated-item-remove"
+                        onClick={() => removeDraftItem(index)}
+                        aria-label={`Delete ${item.title}`}
+                      >
+                        ×
+                      </button>
                     </div>
 
                     <label className="editor-field">

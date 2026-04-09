@@ -39,10 +39,14 @@ export default function RootLayout({
           <Image src="/Caerulea.PNG" alt="Caerulea" width={28} height={28} />
         </Link>
         {children}
+        <div id="page-bottom" />
         {/* 这是全站通用的“回到顶部”按钮。
             因为它写在 layout 里，所以首页、档案页和未来新页面都会自动拥有它。 */}
         <a href="#page-top" className="back-to-top" aria-label="Back to top">
           ↑
+        </a>
+        <a href="#page-bottom" className="back-to-bottom" aria-label="Back to bottom">
+          ↓
         </a>
         {/* 这是进入编辑页的临时入口。
             先放在右下角，后面再把真正的编辑表单页面接上。 */}

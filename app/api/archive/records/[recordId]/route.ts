@@ -61,7 +61,7 @@ export async function PATCH(
 
     const { data: section, error: sectionError } = await supabase
       .from("sections")
-      .select("id")
+      .select("id, code")
       .eq("slug", payload.sectionSlug)
       .single();
 
@@ -279,7 +279,7 @@ export async function PATCH(
     const desiredCodes = await renumberSectionRecordCodes(
       supabase,
       section.id,
-      payload.sectionSlug.toUpperCase(),
+      section.code,
     );
     const nextRecordCode = desiredCodes.get(existingRecord.id) ?? recordId;
 
