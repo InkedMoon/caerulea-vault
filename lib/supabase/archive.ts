@@ -66,7 +66,10 @@ type RecordTagRow = {
   tags: {
     name: string;
     tag_type: "generic" | "character" | "status";
-  } | null;
+  } | {
+    name: string;
+    tag_type: "generic" | "character" | "status";
+  }[] | null;
 };
 
 type ItemTagRow = {
@@ -74,7 +77,10 @@ type ItemTagRow = {
   tags: {
     name: string;
     tag_type: "generic" | "character" | "status";
-  } | null;
+  } | {
+    name: string;
+    tag_type: "generic" | "character" | "status";
+  }[] | null;
 };
 
 export type ArchiveSectionNav = {
@@ -254,7 +260,7 @@ export async function getArchiveRecordDetailPageData(
       throw new Error(`Failed to load item tags: ${error.message}`);
     }
 
-    itemTags = (data ?? []) as ItemTagRow[];
+    itemTags = (data ?? []) as unknown as ItemTagRow[];
   }
 
   const gallery: Record<RecordGalleryKey, RecordGalleryImage> = {
@@ -272,20 +278,18 @@ export async function getArchiveRecordDetailPageData(
   }
 
   const recordTags = ((recordTagsData ?? []) as RecordTagRow[])
-    .map((entry) => entry.tags)
-    .filter(Boolean);
+    .flatMap((entry) => (Array.isArray(entry.tags) ? entry.tags : entry.tags ? [entry.tags] : []));
 
   const itemTagsByItemId = new Map<string, { name: string; tag_type: string }[]>();
 
   for (const entry of itemTags) {
-    const tag = entry.tags;
-
-    if (!tag) {
-      continue;
-    }
-
     const current = itemTagsByItemId.get(entry.item_id) ?? [];
-    current.push(tag);
+    const nextTags = Array.isArray(entry.tags)
+      ? entry.tags
+      : entry.tags
+        ? [entry.tags]
+        : [];
+    current.push(...nextTags);
     itemTagsByItemId.set(entry.item_id, current);
   }
 
