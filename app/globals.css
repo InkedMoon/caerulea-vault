@@ -1,10 +1,17 @@
 @import "tailwindcss";
 
+/* 全站颜色变量：
+   这里集中管理背景色、文字色、边框色和强调色。 */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #06131d;
+  --foreground: #dbe8f1;
+  --muted: #8aa4b8;
+  --panel: rgba(8, 28, 41, 0.78);
+  --border: rgba(138, 164, 184, 0.22);
+  --accent: #8cd3ff;
 }
 
+/* 把 Next 字体变量接进 Tailwind / 全局样式。 */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -12,15 +19,1197 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* 全局基础重置。 */
+* {
+  box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+/* 页面基础背景、默认字体和整体氛围渐变。 */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(circle at top, rgba(26, 69, 94, 0.45), transparent 32%),
+    linear-gradient(180deg, #0b1d29 0%, #06131d 55%, #040b12 100%);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 全站右下角“回到顶部”按钮。 */
+.home-link-button {
+  position: fixed;
+  left: 24px;
+  top: 24px;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(196, 230, 249, 0.42);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.76), rgba(214, 232, 243, 0.9)),
+    rgba(236, 245, 251, 0.94);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.42),
+    0 10px 30px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(10px);
+}
+
+.back-to-top {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(140, 211, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(7, 21, 31, 0.82);
+  color: var(--accent);
+  font-size: 1.15rem;
+  line-height: 1;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(10px);
+}
+
+/* 右下角新增记录按钮：
+   目前先作为进入编辑页的入口，放在回到顶部按钮下面。 */
+.add-record-button {
+  position: fixed;
+  right: 24px;
+  bottom: 78px;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(140, 211, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(7, 21, 31, 0.82);
+  color: var(--accent);
+  font-size: 1.35rem;
+  line-height: 1;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(10px);
+}
+
+.edit-record-button {
+  position: fixed;
+  right: 24px;
+  bottom: 132px;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(140, 211, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(7, 21, 31, 0.82);
+  color: var(--accent);
+  font-size: 1.15rem;
+  line-height: 1;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(10px);
+}
+
+/* 通用页面容器：
+   控制内容最大宽度，以及左右留白。 */
+.page-shell {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 24px 0 72px;
+}
+
+/* 首页顶部导航。 */
+.top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 22px;
+  margin-top: 12px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: rgba(4, 15, 23, 0.55);
+  backdrop-filter: blur(14px);
+}
+
+/* 小标题 / 眉题类文字：
+   首页、档案页都共用这组样式。 */
+.nav-eyebrow,
+.hero-kicker,
+.archive-category {
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.nav-title {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+
+/* 导航链接容器与按钮。 */
+.nav-links {
+  display: flex;
+  gap: 12px;
+}
+
+.nav-links a {
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(140, 211, 255, 0.08);
+}
+
+/* 首页主介绍面板 + 档案页头部面板。 */
+.hero-panel,
+.archive-header {
+  margin-top: 28px;
+  padding: 40px 28px;
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  background: var(--panel);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+}
+
+/* 主标题大小。 */
+.hero-panel h1,
+.archive-header h1 {
+  margin: 12px 0 0;
+  font-size: clamp(2.4rem, 6vw, 4.8rem);
+  line-height: 0.96;
+}
+
+/* 首页双语正文。 */
+.hero-copy {
+  margin: 0;
+  color: #c5d7e4;
+  font-size: 1.05rem;
+  line-height: 1.9;
+  white-space: pre-line;
+}
+
+/* 首页双栏排版。 */
+.hero-copy-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+  margin-top: 36px;
+}
+
+/* 首页每一列文字面板。 */
+.hero-copy-column {
+  display: grid;
+  gap: 18px;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: rgba(4, 15, 23, 0.34);
+}
+
+/* 档案页顶部简介文字。 */
+.archive-intro {
+  max-width: 720px;
+  margin: 18px 0 0;
+  color: #c5d7e4;
+  line-height: 1.8;
+}
+
+/* 新增记录页布局。 */
+.record-editor-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 240px;
+  gap: 22px;
+  margin-top: 22px;
+}
+
+.record-editor-panel {
+  display: grid;
+  gap: 18px;
+}
+
+.editor-section {
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: rgba(7, 21, 31, 0.88);
+}
+
+.editor-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.editor-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.editor-field {
+  display: grid;
+  gap: 8px;
+}
+
+.editor-span-2 {
+  grid-column: span 2;
+}
+
+.editor-field span {
+  color: #c7d8e5;
+  font-size: 0.92rem;
+}
+
+.editor-field input,
+.editor-field select,
+.editor-field textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(140, 211, 255, 0.05);
+  color: var(--foreground);
+  font: inherit;
+}
+
+.editor-field textarea {
+  resize: vertical;
+}
+
+.editor-add-button {
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(140, 211, 255, 0.08);
+  color: var(--accent);
+  font: inherit;
+  cursor: pointer;
+}
+
+.editor-generated-items {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.generated-item-card {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: rgba(140, 211, 255, 0.04);
+}
+
+.generated-item-title {
+  margin: 0;
+  color: #f2f8fc;
+}
+
+.generated-item-id {
+  margin: 6px 0 0;
+  color: #8fb0c7;
+  font-size: 0.82rem;
+}
+
+.editor-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.editor-action-button {
+  min-width: 120px;
+  padding: 12px 18px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(140, 211, 255, 0.05);
+  color: var(--foreground);
+  font: inherit;
+  cursor: pointer;
+}
+
+.editor-action-button.primary {
+  background: rgba(140, 211, 255, 0.14);
+  border-color: rgba(140, 211, 255, 0.32);
+}
+
+.editor-action-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.56;
+}
+
+.editor-help {
+  margin: 0;
+  color: #b6cada;
+  line-height: 1.7;
+}
+
+.editor-feedback {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(140, 211, 255, 0.06);
+}
+
+.editor-feedback.is-success {
+  border-color: rgba(79, 184, 155, 0.26);
+  color: #c9f4e8;
+}
+
+.editor-feedback.is-error {
+  border-color: rgba(255, 132, 132, 0.28);
+  color: #ffd4d4;
+}
+
+/* 分类详情页的主布局：
+   左边是索引，右边是当前分类内容。 */
+.archive-layout {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: 22px;
+  margin-top: 22px;
+}
+
+/* 档案库总索引页的分类卡片网格。 */
+.archive-directory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+  margin-top: 22px;
+}
+
+/* 档案页常用面板外观：
+   侧栏、概览框、以及部分内容块共用。 */
+.archive-sidebar,
+.archive-overview,
+.archive-section-card {
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: rgba(7, 21, 31, 0.88);
+}
+
+/* 左侧分类索引侧栏。 */
+.archive-sidebar {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+  padding: 16px 12px;
+}
+
+/* 侧栏标题。 */
+.archive-sidebar-title {
+  margin: 0 0 16px;
+  color: var(--accent);
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* 左侧分类列表。 */
+.archive-index-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* 左侧分类链接按钮。 */
+.archive-index-list a {
+  width: 100%;
+  display: block;
+  min-width: 0;
+  padding: 10px 8px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  color: #cfe0eb;
+  background: rgba(140, 211, 255, 0.05);
+  text-align: center;
+  font-size: 0.88rem;
+  line-height: 1.25;
+}
+
+/* 当前正在查看的分类。 */
+.archive-index-list .is-active {
+  border-color: rgba(140, 211, 255, 0.4);
+  background: rgba(140, 211, 255, 0.14);
+  color: #f2f8fc;
+}
+
+/* 返回档案总索引的链接。 */
+.archive-back-link {
+  display: inline-block;
+  margin-top: 18px;
+  color: var(--accent);
+  font-size: 0.92rem;
+}
+
+/* 分类详情页右侧内容区。 */
+.archive-content {
+  display: grid;
+  gap: 18px;
+}
+
+/* 分类页里的记录列表。 */
+.record-list {
+  display: grid;
+  gap: 14px;
+}
+
+.record-list-card {
+  display: block;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: rgba(7, 21, 31, 0.88);
+}
+
+.record-list-preview {
+  position: relative;
+  aspect-ratio: 16 / 7;
+  margin-bottom: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(140, 211, 255, 0.12);
+  border-radius: 16px;
+  background:
+    linear-gradient(160deg, rgba(140, 211, 255, 0.12), rgba(8, 28, 41, 0.16)),
+    #0c2230;
+}
+
+.record-list-preview-image {
+  object-fit: cover;
+}
+
+.record-list-preview-empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #9fb8c9;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+}
+
+.record-list-top {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.record-list-card h2 {
+  margin: 8px 0 0;
+  font-size: 1.25rem;
+}
+
+.record-list-note {
+  margin-top: 12px;
+  color: #c8d9e4;
+}
+
+.record-list-stage {
+  margin-top: 10px;
+  color: #8fb0c7;
+  font-size: 0.9rem;
+}
+
+.record-card-link {
+  text-decoration: none;
+}
+
+.record-card-image {
+  min-height: 0;
+}
+
+.record-card-image-overlay {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.record-card-image-overlay > * {
+  flex: 0 0 auto;
+}
+
+.record-card-link .archive-meta h2 {
+  margin: 0;
+  font-size: 0.96rem;
+  line-height: 1.25;
+}
+
+.record-card-link .archive-meta p {
+  margin-top: 4px;
+  line-height: 1.35;
+}
+
+.record-card-link .archive-meta {
+  min-height: 68px;
+  align-content: start;
+}
+
+.record-card-meta-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.record-card-status {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.2;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.status-text.status-planned {
+  color: #d3dce3;
+}
+
+.status-text.status-active {
+  color: #bde1ff;
+}
+
+.status-text.status-archived {
+  color: #c9f4e8;
+}
+
+.status-text.status-restart_planned {
+  color: #e2d7ff;
+}
+
+/* 单条记录详情页整体布局。 */
+.record-detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 240px;
+  gap: 22px;
+  margin-top: 22px;
+}
+
+.record-detail-main {
+  display: grid;
+  gap: 18px;
+}
+
+.record-gallery-panel {
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: rgba(7, 21, 31, 0.88);
+}
+
+.record-gallery-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.record-gallery-tabs a {
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(140, 211, 255, 0.05);
+}
+
+.record-gallery-tabs .is-active {
+  border-color: rgba(140, 211, 255, 0.4);
+  background: rgba(140, 211, 255, 0.14);
+  color: #f2f8fc;
+}
+
+.record-hero-image {
+  position: relative;
+  min-height: 0;
+  aspect-ratio: 16 / 9;
+  border-radius: 20px;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    linear-gradient(160deg, rgba(140, 211, 255, 0.18), rgba(8, 28, 41, 0.2)),
+    radial-gradient(circle at top, rgba(171, 229, 255, 0.18), transparent 45%),
+    #0c2230;
+}
+
+.record-hero-image-content {
+  object-fit: contain;
+}
+
+.record-gallery-empty {
+  margin: 0;
+  padding: 24px;
+  color: #d5e5ef;
+}
+
+.items-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.item-tile-wrap {
+  position: relative;
+}
+
+.item-tile {
+  display: grid;
+  align-content: space-between;
+  width: 100%;
+  min-height: 130px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: rgba(140, 211, 255, 0.04);
+  color: #d5ebf8;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.item-tile-name {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 0.88rem;
+  line-height: 1.35;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.item-tile-price {
+  align-self: end;
+  color: #f2f8fc;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.88rem;
+}
+
+.item-popup {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 8px);
+  z-index: 5;
+  width: min(220px, calc(100vw - 80px));
+  aspect-ratio: 1 / 1;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(7, 21, 31, 0.96);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.24);
+}
+
+.item-popup-title,
+.item-popup-note,
+.item-popup-tags {
+  margin: 0;
+}
+
+.item-popup-title {
+  color: #f2f8fc;
+}
+
+.item-popup-note,
+.item-popup-tags {
+  margin-top: 8px;
+  color: #b6cada;
+  line-height: 1.6;
+}
+
+/* 档案记录头部：
+   左边是编号和标题，右边是状态标签。 */
+.record-header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.record-status-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.status-pill,
+.stage-pill,
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  line-height: 1;
+}
+
+.status-pill {
+  border: 1px solid var(--border);
+}
+
+.status-planned {
+  background: rgba(132, 153, 173, 0.14);
+  color: #d3dce3;
+}
+
+.status-active {
+  background: rgba(67, 162, 255, 0.16);
+  color: #bde1ff;
+}
+
+.status-archived {
+  background: rgba(79, 184, 155, 0.16);
+  color: #c9f4e8;
+}
+
+.status-restart_planned {
+  background: rgba(176, 153, 255, 0.16);
+  color: #e2d7ff;
+}
+
+.stage-pill {
+  border: 1px solid rgba(140, 211, 255, 0.18);
+  background: rgba(140, 211, 255, 0.08);
+  color: #c7e6f8;
+}
+
+/* 档案记录的数字信息区。 */
+.record-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.metric-card {
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: rgba(140, 211, 255, 0.04);
+}
+
+.metric-span-2 {
+  grid-column: span 2;
+}
+
+.metric-label {
+  margin: 0;
+  color: #8fb0c7;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.metric-value {
+  margin: 8px 0 0;
+  color: #f2f8fc;
+  font-size: 1.05rem;
+}
+
+.metric-detail {
+  margin-top: 8px;
+  color: #b8cddd;
+  font-size: 0.88rem;
+}
+
+.record-share-note,
+.record-notes {
+  margin-top: 16px;
+}
+
+/* 标签区域。 */
+.tag-block {
+  margin-top: 16px;
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.tag-row.compact {
+  margin-top: 10px;
+}
+
+.tag-chip {
+  border: 1px solid rgba(140, 211, 255, 0.18);
+  background: rgba(140, 211, 255, 0.07);
+  color: #c7e6f8;
+}
+
+.tag-character {
+  background: rgba(255, 224, 143, 0.09);
+  border-color: rgba(255, 224, 143, 0.18);
+  color: #ffe7a3;
+}
+
+/* 概览面板和物品卡片的内边距。 */
+.archive-overview,
+.archive-card {
+  padding: 22px;
+}
+
+/* 概览标题、物品标题。 */
+.archive-overview h2,
+.archive-meta h2 {
+  margin: 10px 0 10px;
+  font-size: 1.4rem;
+}
+
+/* 概览正文、物品说明文字。 */
+.archive-overview p,
+.archive-meta p {
+  margin: 0;
+  color: #b6cada;
+  line-height: 1.7;
+}
+
+/* 物品卡片网格：
+   桌面端保持小卡片、靠左排列。 */
+.archive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(198px, 228px));
+  gap: 12px;
+  justify-content: start;
+}
+
+/* 档案库总索引卡片、物品卡片的共有外框。 */
+.archive-directory-card,
+.archive-card {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: rgba(7, 21, 31, 0.88);
+}
+
+/* 档案库总索引页的分类入口卡片。 */
+.archive-directory-card {
+  display: block;
+  min-height: 220px;
+  padding: 22px;
+  transition: border-color 180ms ease, transform 180ms ease;
+}
+
+/* 鼠标移上去时的轻微浮起效果。 */
+.archive-directory-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(140, 211, 255, 0.38);
+}
+
+/* 分类入口卡片的标题和说明。 */
+.archive-directory-card h2 {
+  margin: 10px 0;
+  font-size: 1.4rem;
+}
+
+.archive-directory-card p:last-child {
+  margin: 0;
+  color: #b6cada;
+  line-height: 1.7;
+}
+
+/* 单个物品卡片：
+   整体控制成接近正方形，上面图片，下面简要信息。 */
+.archive-card {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  width: 100%;
+  max-width: 228px;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+}
+
+/* 物品卡片里的图片区域。 */
+.archive-image {
+  position: relative;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(160deg, rgba(140, 211, 255, 0.28), rgba(8, 28, 41, 0.2)),
+    radial-gradient(circle at top, rgba(171, 229, 255, 0.3), transparent 45%),
+    #0c2230;
+}
+
+/* 真正的图片内容：
+   用 cover 保证图片铺满并裁切中间区域。 */
+.archive-image-content {
+  object-fit: cover;
+}
+
+.archive-image-content-contain {
+  object-fit: contain;
+  padding: 10px;
+}
+
+/* 没有图片时的占位样式。 */
+.archive-image-placeholder {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+}
+
+/* 图片编号胶囊。 */
+.archive-image span,
+.archive-image-code {
+  padding: 6px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.22);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+}
+
+/* 图片左下角的编号位置。 */
+.archive-image-code {
+  position: static;
+  z-index: auto;
+  backdrop-filter: blur(8px);
+}
+
+/* 没有图片时的占位文字。 */
+.archive-image-placeholder-label {
+  color: #dcebf4;
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* 物品卡片底部的标题和说明区。 */
+.archive-meta {
+  display: grid;
+  gap: 6px;
+  padding: 8px 10px 10px;
+}
+
+/* 物品标题。 */
+.archive-meta h2 {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.3;
+}
+
+/* 物品说明：
+   当前只显示一行，避免卡片高度被文字撑开。 */
+.archive-meta p {
+  display: -webkit-box;
+  overflow: hidden;
+  color: #9fb8c9;
+  font-size: 0.76rem;
+  line-height: 1.4;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.archive-price {
+  color: #d8edf9;
+  font-size: 0.8rem;
+}
+
+/* 第一层响应式：
+   处理平板和普通手机，主要是把双栏变单栏、侧栏变顶部。 */
+@media (max-width: 720px) {
+  .page-shell {
+    width: min(100% - 20px, 1120px);
+  }
+
+  .top-nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-panel,
+  .archive-header {
+    padding: 28px 20px;
+  }
+
+  .hero-copy {
+    font-size: 1rem;
+  }
+
+  .hero-copy-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .archive-layout {
+    grid-template-columns: 108px minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .record-editor-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .record-detail-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .record-header {
+    flex-direction: column;
+  }
+
+  .record-status-row {
+    justify-content: flex-start;
+  }
+
+  .archive-directory-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .editor-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .editor-span-2 {
+    grid-column: span 1;
+  }
+
+  .archive-directory-card {
+    min-height: 200px;
+  }
+
+  .archive-sidebar {
+    position: sticky;
+    top: 16px;
+    padding: 12px 8px;
+  }
+
+  .archive-sidebar-title {
+    margin-bottom: 10px;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+  }
+
+  .archive-index-list {
+    gap: 8px;
+  }
+
+  .archive-index-list a {
+    width: 100%;
+    padding: 9px 6px;
+    white-space: normal;
+    font-size: 0.82rem;
+  }
+
+  .archive-back-link {
+    margin-top: 14px;
+  }
+
+  .archive-overview,
+  .archive-card {
+    padding: 16px;
+  }
+
+  .archive-card {
+    max-width: none;
+  }
+
+  .archive-meta {
+    padding: 10px 12px 12px;
+  }
+
+  .archive-meta h2 {
+    font-size: 0.92rem;
+  }
+
+  .archive-meta p {
+    font-size: 0.8rem;
+  }
+
+  .record-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .editor-actions {
+    flex-direction: column;
+  }
+
+  .metric-span-2 {
+    grid-column: span 2;
+  }
+
+  .record-hero-image {
+    aspect-ratio: 4 / 3;
+  }
+
+  .back-to-top {
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .home-link-button {
+    left: 16px;
+    top: 16px;
+    width: 42px;
+    height: 42px;
+  }
+
+  .add-record-button {
+    right: 16px;
+    bottom: 70px;
+  }
+
+  .edit-record-button {
+    right: 16px;
+    bottom: 124px;
+  }
+}
+
+/* 这里控制“物品卡片开始变成两列”的屏幕宽度。
+   如果你以后想更早或更晚切换两列，就改这里  */
+@media (max-width: 500px) {
+  .archive-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .record-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .metric-span-2 {
+    grid-column: span 1;
+  }
+}
+
+/* 这里控制“物品卡片开始变成单列”的屏幕宽度。
+   如果你以后想更早或更晚切换单列，就改这里   */
+@media (max-width: 200px) {
+  .archive-grid {
+    grid-template-columns: 1fr;
+  }
 }

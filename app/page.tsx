@@ -1,65 +1,66 @@
-import Image from "next/image";
+import Link from "next/link";
+
+const chineseIntro = [
+  "在深处，思想并不是孤立存在的。",
+  "意识如海。\n深蓝、无边、安静而辽阔。",
+  "我们在其中各自存在，\n微小的光点，漂浮在深蓝之中。",
+  "思想会缓慢地向外延伸，\n如水中的波纹\n如无形的潮流",
+  "那里，连接发生。",
+  "不似言语\n亦非讯号",
+  "更像一种在深处浮现的回响",
+  "深蓝研究所相信，\n意识从来不是封闭的。",
+  "而我们所做的，\n只是记录那些偶然出现的连接\n那些从深处延伸出的触点，\n以及它们彼此相遇的瞬间。",
+  "而深蓝，始终在这里。",
+];
+
+const englishIntro = [
+  "In the depths, thought is not alone.",
+  "Mind is an ocean.\nCaerulea: boundless, quiet, and vast.",
+  "Within it we exist,\nsmall points of light drifting in the blue.",
+  "Thought slowly extends outward,\nlike ripples in water,\nlike unseen currents.",
+  "There, connection occurs.",
+  "Not words\nnor signals",
+  "Rather a resonance emerging from the depths.",
+  "Caerulea Institute believes\nconsciousness has never been closed.",
+  "What we do\nis simply note those rare connections.\nThe points that extend from the depths,\nand the moments when they intersect.",
+  "Caerulea is always here.",
+];
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="page-shell">
+      <nav className="top-nav" aria-label="Primary">
+        <div>
+          <p className="nav-eyebrow">Caerulea Institute</p>
+          <p className="nav-title">深蓝研究所</p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="nav-links">
+          <Link href="/archive">档案库</Link>
         </div>
-      </main>
-    </div>
+      </nav>
+
+      <section className="hero-panel">
+        <p className="hero-kicker">Caerulea Institute</p>
+        <h1>深蓝研究所</h1>
+
+        <div className="hero-copy-grid">
+          <section className="hero-copy-column">
+            {chineseIntro.map((paragraph) => (
+              <p key={paragraph} className="hero-copy">
+                {paragraph}
+              </p>
+            ))}
+          </section>
+
+          <section className="hero-copy-column">
+            {englishIntro.map((paragraph) => (
+              <p key={paragraph} className="hero-copy">
+                {paragraph}
+              </p>
+            ))}
+          </section>
+        </div>
+      </section>
+    </main>
   );
 }
