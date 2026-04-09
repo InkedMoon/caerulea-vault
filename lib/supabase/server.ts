@@ -12,8 +12,13 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error("Missing Supabase environment variables in .env.local");
 }
 
+// 经过上面的守卫后，这两个值在运行时一定存在。
+// 这里单独收成常量，是为了让 TypeScript 在构建时也明确知道它们是 string。
+const verifiedSupabaseUrl = supabaseUrl;
+const verifiedSupabaseAnonKey = supabaseAnonKey;
+
 export function createSupabaseServerClient() {
-  return createClient(supabaseUrl, supabaseAnonKey);
+  return createClient(verifiedSupabaseUrl, verifiedSupabaseAnonKey);
 }
 
 // 这个是服务端高权限客户端。
@@ -23,7 +28,7 @@ export function createSupabaseAdminClient() {
     throw new Error("Missing SUPABASE_SECRET_KEY in .env.local");
   }
 
-  return createClient(supabaseUrl, supabaseSecretKey, {
+  return createClient(verifiedSupabaseUrl, supabaseSecretKey, {
     auth: {
       autoRefreshToken: false,
       persistSession: false,
